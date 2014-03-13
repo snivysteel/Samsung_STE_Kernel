@@ -135,8 +135,6 @@ static const u8 DCS_CMD_SEQ_S6D27A1_INIT[] = {
 /*	Length	Command				Parameters */
 	3,	DCS_CMD_S6D27A1_PASSWD_L2,	0x5A, 0x5A,			/* Unlock L2 Cmds */
 	2,	DCS_CMD_S6D27A1_RESCTL,		0x22,				/* 480RGB x 800 */
-	/* Flip V(d0), Flip H(d1), RGB/BGR(d3) */
-	2,	DCS_CMD_SET_ADDRESS_MODE,	0x08,
 	9,	DCS_CMD_S6D27A1_PANELCTL2,	0x00, 0x02, 0x03, 0x04, 0x05,
 						0x08, 0x00, 0x0c,
 	8,	DCS_CMD_S6D27A1_MANPWR,		0x01, 0x00, 0x00, 0x08, 0x08,
