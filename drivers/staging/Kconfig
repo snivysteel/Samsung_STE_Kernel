@@ -192,4 +192,7 @@ config STE_WLAN
 	
 source "drivers/staging/etf_drivers/Kconfig"
 endif
+
+source "drivers/staging/cpupower/Kconfig" 
+
 endif # STAGING
