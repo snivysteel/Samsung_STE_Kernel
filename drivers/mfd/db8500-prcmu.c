@@ -1100,7 +1100,7 @@ static struct liveopp_arm_table liveopp_arm[] = {
 	{1100000, 1100800, ARM_MAX_OPP, NO_CHANGE, 0x00000741, SET_PLLARM, 0x00030156, SET_VOLT,  0x0B, 0x3F, 0xDB},
 	{1150000, 1152000, ARM_MAX_OPP, NO_CHANGE, 0x00000741, SET_PLLARM, 0x0001011E, SET_VOLT,  0x0B, 0x3F, 0xCF},
 	{1200000, 1200000, ARM_MAX_OPP, NO_CHANGE, 0x00000741, SET_PLLARM, 0x0004017D, SET_VOLT,  0x0B, 0x3F, 0xCF},
-	{1250000, 1238400, ARM_MAX_OPP, NO_CHANGE, 0x00000741, SET_PLLARM, 0x00040181, SET_VOLT,  0x0B, 0x3F, 0xCF},
+	{1250000, 1228800, ARM_MAX_OPP, NO_CHANGE, 0x00000741, SET_PLLARM, 0x00010120, SET_VOLT,  0x0B, 0x3F, 0xCF},
 };
 
 static void liveopp_set_armvolt(struct liveopp_arm_table table)
@@ -1479,6 +1479,11 @@ static int arm_set_rate(unsigned long rate)
 			if (db8500_prcmu_get_arm_opp() == ARM_MAX_OPP) {
 				db8500_prcmu_writel(PRCMU_PLLARM_REG, PLLARM_MAXOPP);
 			}
+			#ifdef CONFIG_MACH_CODINA
+			if (db8500_prcmu_get_arm_opp() == ARM_100_OPP) {
+				db8500_prcmu_writel(PRCMU_PLLARM_REG, PLLARM_FREQ100OPP);
+			}
+			#endif
 			db8500_prcmu_set_arm_lopp(liveopp_arm[i].arm_opp, i);
 			last_arm_idx = i;
 
@@ -4532,6 +4537,16 @@ static void  db8500_prcmu_update_freq(void *pdata)
 	pr_info("[LiveOPP] Available freqs: %d\n", ARRAY_SIZE(liveopp_arm));
 	for (i = 0; i < ARRAY_SIZE(liveopp_arm); i++) {
 		freq_table[i].frequency = liveopp_arm[i].freq_show;
+
+		#ifdef CONFIG_MACH_CODINA
+		if (liveopp_arm[i].arm_opp == ARM_MAX_OPP)
+			liveopp_arm[i].arm_opp = ARM_100_OPP;
+
+		if (liveopp_arm[i].freq_show == 1000000) {
+			liveopp_arm[i].set_pllarm = 1;
+			liveopp_arm[i].set_volt = 1;
+		}
+		#endif
 	}
 	#else /* CONFIG_DB8500_LIVEOPP */
 	if  (!db8500_prcmu_has_arm_maxopp())
@@ -4552,7 +4567,6 @@ static void  db8500_prcmu_update_freq(void *pdata)
 	default:
 		break;
 	}
-
 	#endif /* CONFIG_DB8500_LIVEOPP */
 }
 
