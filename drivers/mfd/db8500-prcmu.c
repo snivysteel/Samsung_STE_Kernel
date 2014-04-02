@@ -828,12 +828,12 @@ static bool db8500_prcmu_has_arm_maxopp(void)
 	return (readb(tcdm_base + PRCM_AVS_VARM_MAX_OPP) &
 		PRCM_AVS_ISMODEENABLE_MASK) == PRCM_AVS_ISMODEENABLE_MASK;
 }
+#endif /* CONFIG_DB8500_LIVEOPP */
 
 static void db8500_prcmu_vc(bool enable)
 {
 	writel((enable ? 0xF : 0), (tcdm_base + PRCM_TCDM_VOICE_CALL_FLAG));
 }
-#endif /* CONFIG_DB8500_LIVEOPP */
 
 /**
  * prcmu_get_boot_status - PRCMU boot status checking
