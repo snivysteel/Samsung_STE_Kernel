@@ -609,7 +609,7 @@ static int fsync_control_panic_event(struct notifier_block *this,
 	sync_filesystems(0);
 	sync_filesystems(1);
 	// pr_warn("[FSYNC] Reboot handler flushing data\n");
-}
+
 	return NOTIFY_DONE;
 }
 
