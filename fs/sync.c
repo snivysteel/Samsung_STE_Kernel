@@ -602,6 +602,22 @@ static struct attribute_group fsync_interface_group = {
 
 static struct kobject *fsync_kobject;
 
+static int fsync_control_panic_event(struct notifier_block *this,
+		unsigned long event, void *ptr)
+{
+	wakeup_flusher_threads(0);
+	sync_filesystems(0);
+	sync_filesystems(1);
+	// pr_warn("[FSYNC] Reboot handler flushing data\n");
+}
+	return NOTIFY_DONE;
+}
+
+static struct notifier_block fsync_control_panic_block = {
+	.notifier_call  = fsync_control_panic_event,
+	.priority       = INT_MAX,
+};
+
 static int fsync_reboot_handler(struct notifier_block *this, unsigned long code, void *unused)
 {
 	if (code == SYS_DOWN || code == SYS_HALT) {
@@ -612,7 +628,7 @@ static int fsync_reboot_handler(struct notifier_block *this, unsigned long code,
 			sync_filesystems(0);
 			sync_filesystems(1);
 
-			pr_warn("[FSYNC] Reboot handler flushing data\n");
+			// pr_warn("[FSYNC] Reboot handler flushing data\n");
 		}
 	}
 
@@ -647,6 +663,8 @@ static int __init fsync_module_init(void)
 
 	register_early_suspend(&early_suspend);
 	register_reboot_notifier(&fsync_control_notifier);
+	atomic_notifier_chain_register(&panic_notifier_list,
+        &fsync_control_panic_block);
 
 	pr_info("[FSYNC] FSync control registered.");
 
