@@ -1003,6 +1003,20 @@ config CC_OPTIMIZE_FAST
 
 endchoice
 
+config CC_GRAPHITE_OPTIMIZATION
+	bool "Enable graphite optimizations"
+	help
+	  Enabling this option will turn on graphite optimizations.
+
+	  If unsure, say N.
+
+config CC_LINK_TIME_OPTIMIZATION
+	bool "Enable link-time optimization"
+	help
+	  Enabling this option will turn on link time optimization.
+
+	  If unsure, say N.
+
 config SYSCTL
 	bool
 

@@ -368,6 +368,9 @@ else
 CFLAGS_KERNEL  = -fgcse-lm -fgcse-sm -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mtune=cortex-a9 -marm -march=armv7-a -mfpu=neon -ftree-vectorize -mvectorize-with-neon-quad -D__linux__
 AFLAGS_KERNEL   = -fgcse -fsingle-precision-constant -mtune=cortex-a9 -march=armv7-a -mfpu=neon -ftree-vectorize
 endif
+ifdef CONFIG_CC_LINK_TIME_OPTIMIZATION
+CFLAGS_KERNEL	+= -flto -fno-toplevel-reorder -fuse-linker-plugin
+endif
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
@@ -595,6 +598,9 @@ KBUILD_CFLAGS  += -O3
 endif
 ifdef CONFIG_CC_OPTIMIZE_FAST
 KBUILD_CFLAGS  += -Ofast
+endif
+ifdef CONFIG_CC_LINK_TIME_OPTIMIZATION
+KBUILD_CFLAGS	+= -flto -fno-toplevel-reorder -fuse-linker-plugin
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
